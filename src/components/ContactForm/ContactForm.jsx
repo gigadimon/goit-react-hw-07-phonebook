@@ -1,9 +1,24 @@
 import { useState } from 'react';
 
 import { ContactFormMarkup } from './ContactFormMarkup';
-import { useAddContactMutation } from 'redux/contactSlice';
+import { useAddContactMutation, useGetContactsQuery } from 'redux/contactSlice';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const contactExistsNotify = () =>
+  toast.error('This person is already in your phonebook', {
+    position: 'top-right',
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
 
 export function ContactForm() {
+  const { data: contacts } = useGetContactsQuery();
   const [addContact, { isLoading }] = useAddContactMutation();
 
   const [name, setName] = useState('');
@@ -24,10 +39,12 @@ export function ContactForm() {
   const handleSubmit = event => {
     event.preventDefault();
 
-    addContact({
-      name,
-      phone,
-    });
+    contacts.filter(contact => contact.name === name).length === 0
+      ? addContact({
+          name,
+          phone,
+        })
+      : contactExistsNotify();
 
     reset();
   };
@@ -38,12 +55,25 @@ export function ContactForm() {
   }
 
   return (
-    <ContactFormMarkup
-      handleSubmit={handleSubmit}
-      handleChange={handleChange}
-      name={name}
-      phone={phone}
-      isLoading={isLoading}
-    />
+    <>
+      <ContactFormMarkup
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+        name={name}
+        phone={phone}
+        isLoading={isLoading}
+      />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
   );
 }
