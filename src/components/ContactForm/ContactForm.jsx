@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { ContactFormMarkup } from './ContactFormMarkup';
-import { useAddContactMutation, useGetContactsQuery } from 'redux/contactSlice';
+import { useAddContactMutation, contactsApi } from 'redux/contactSlice';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,7 +18,7 @@ const contactExistsNotify = () =>
   });
 
 export function ContactForm() {
-  const { data: contacts } = useGetContactsQuery();
+  const { data: contacts } = contactsApi.endpoints.getContacts.useQueryState();
   const [addContact, { isLoading }] = useAddContactMutation();
 
   const [name, setName] = useState('');
