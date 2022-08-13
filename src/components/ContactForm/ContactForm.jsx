@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const contactExistsNotify = () =>
-  toast.error('This person is already in your phonebook', {
+  toast.error('This contact is already in your phonebook', {
     position: 'top-right',
     autoClose: 5000,
     hideProgressBar: false,
@@ -39,7 +39,8 @@ export function ContactForm() {
   const handleSubmit = event => {
     event.preventDefault();
 
-    contacts.filter(contact => contact.name === name).length === 0
+    contacts.filter(contact => contact.name === name || contact.phone === phone)
+      .length === 0
       ? addContact({
           name,
           phone,
