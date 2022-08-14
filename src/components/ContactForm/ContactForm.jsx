@@ -39,13 +39,15 @@ export function ContactForm() {
   const handleSubmit = event => {
     event.preventDefault();
 
-    contacts.filter(contact => contact.name === name || contact.phone === phone)
-      .length === 0
-      ? addContact({
-          name,
-          phone,
-        })
-      : contactExistsNotify();
+    contacts &&
+      (contacts.filter(
+        contact => contact.name === name || contact.phone === phone
+      ).length === 0
+        ? addContact({
+            name,
+            phone,
+          })
+        : contactExistsNotify());
 
     reset();
   };
